@@ -625,7 +625,7 @@ RestWrite.prototype.handleSession = function() {
   console.log(this.data)
   console.log('auth')
   console.log(this.auth)
-  if (this.query) {
+  if (this.query || this.data) {
     console.log('1')
     if (this.data.user && !this.auth.isMaster && this.data.user.objectId != this.auth.user.id) {
       console.log('2a')
