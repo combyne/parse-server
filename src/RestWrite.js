@@ -619,27 +619,20 @@ RestWrite.prototype.handleSession = function() {
 
   // emergency patch for https://github.com/parse-community/parse-server/issues/4150
   // using fix in pr https://github.com/parse-community/parse-server/pull/4152/files
-  console.log('query')
-  console.log(this.query)
-  console.log('data')
-  console.log(this.data)
-  console.log('auth')
-  console.log(this.auth)
-  if (this.query || this.data) {
-    console.log('1')
+  if (this.query) {
+    console.log('yes query')
     if (this.data.user && !this.auth.isMaster && this.data.user.objectId != this.auth.user.id) {
-      console.log('2a')
       throw new Parse.Error(Parse.Error.INVALID_KEY_NAME);
     } else if (this.data.installationId) {
-      console.log('2b')
       throw new Parse.Error(Parse.Error.INVALID_KEY_NAME);
     } else if (this.data.sessionToken) {
-      console.log('2c')
       throw new Parse.Error(Parse.Error.INVALID_KEY_NAME);
     }
   }
 
   if (!this.query && !this.auth.isMaster) {
+    console.log('no query')
+    console.log(this.auth.user)
     var token = 'r:' + cryptoUtils.newToken();
     var expiresAt = this.config.generateSessionExpiresAt();
     var sessionData = {
