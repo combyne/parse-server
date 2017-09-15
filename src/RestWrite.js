@@ -617,6 +617,18 @@ RestWrite.prototype.handleSession = function() {
                           'ACL on a Session.');
   }
 
+  // emergency patch for https://github.com/parse-community/parse-server/issues/4150
+  // using fix in pr https://github.com/parse-community/parse-server/pull/4152/files
+  if (this.query) {
+    if (this.data.user && !this.auth.isMaster && this.data.user.objectId != this.auth.user.id) {
+      throw new Parse.Error(Parse.Error.INVALID_KEY_NAME);
+    } else if (this.data.installationId) {
+      throw new Parse.Error(Parse.Error.INVALID_KEY_NAME);
+    } else if (this.data.sessionToken) {
+      throw new Parse.Error(Parse.Error.INVALID_KEY_NAME);
+    }
+  }
+
   if (!this.query && !this.auth.isMaster) {
     var token = 'r:' + cryptoUtils.newToken();
     var expiresAt = this.config.generateSessionExpiresAt();
